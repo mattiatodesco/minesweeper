@@ -91,8 +91,8 @@ public class Campo extends JPanel {
             //Se è gia una mina decremento l'indice e vado avanti, altrimenti la imposto come mina
             if (newMina.getContenuto() == this.MINA)
                 i--;
-            else 
-                newMina.setContenuto(this.MINA);
+            else
+                newMina.setContenuto(this.MINA);   
         }
     }
 
@@ -107,6 +107,8 @@ public class Campo extends JPanel {
                 int conto = 0;
                 //Prendo la cella
                 Cella cella = campo[r][c];
+                //Controllo se è una mina
+                if (cella.getContenuto() == MINA) continue;
                 //Controllo se sta ai bordi
                 int[] bordi = controllaBordi(cella);
 
@@ -131,14 +133,14 @@ public class Campo extends JPanel {
         //Salvo la cella in una variabile
         Cella cella = campo[r][c];
 
-        //Controllo se è gia visibile e in caso non faccio niente
-        if (cella.isVisible()) 
+        //Controllo se è gia visibile o se è una bandiera e in caso non faccio niente
+        if (cella.isBandiera() || cella.isScoperta()) 
             return;
 
         cella.setVisibile(true);
 
         int[] bordi = controllaBordi(cella);
-        
+
         //Se la cella non ha mine adiacenti scopro tutte le sue celle adiacenti
         if (cella.getContenuto() == 0){
             //sopra
@@ -176,7 +178,7 @@ public class Campo extends JPanel {
         else bordi[2] = cella.getC() -1;
         //cMax
         if (cella.getC() +1 >= campo[0].length) bordi[3] = cella.getC();
-        else bordi[3] = cella.getC() -1;
+        else bordi[3] = cella.getC() +1;
 
         return bordi;
     }
