@@ -50,15 +50,15 @@ public class Cella extends Canvas {
             case Scoperta:
                 g.setColor(Color.lightGray);
                 g.fillRect(0, 0, getWidth(), getHeight());
-                
+
 
                 //Se c'è una mina
                 if(contenuto == MINA){
                     g.setColor(Color.red);
-                    g.fillOval(0, 0, getWidth(), getHeight());
+                    g.fillRect(0, 0, getWidth(), getHeight());
                 } else if (contenuto > 0){
-                    g.setColor(colori[contenuto]);
-                    g.drawString(contenuto + "", getWidth()/3, 2*getHeight()/3);
+                        g.setColor(colori[contenuto]);
+                        g.drawString(contenuto + "", getWidth()/3, 2*getHeight()/3);
                 }
                 break;
 
