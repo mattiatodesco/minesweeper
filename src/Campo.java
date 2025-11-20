@@ -14,6 +14,8 @@ public class Campo extends JPanel {
     private int nBandiere = 0;
     private final int MINA = -1;
 
+    private boolean primoClick = true;
+
     public Campo(int righe, int colonne, int maxMine, Container content) {
 
         setPreferredSize(new Dimension(450,300));
@@ -29,8 +31,12 @@ public class Campo extends JPanel {
                 content.add(campo[r][c]);
                 campo[r][c].setLocation(campo[r][c].getWidth() * c, campo[r][c].getHeight() * r); 
 
+                int riga, col;
+                riga = r;
+                col = c;
+
                 // deriviamo una classe anonima
-                campo[r][c].addMouseListener(new MouseAdapter() {
+                this.campo[r][c].addMouseListener(new MouseAdapter() {
                     
                     // MouseListener interfaccia -> MouseAdapter classe astratta
                     // usiamo una classe astratta perché dobbiamo implementare troppi metodi astratti
@@ -46,8 +52,23 @@ public class Campo extends JPanel {
                         // button3: pulsante dx
                         switch (e.getButton()) {
                             case MouseEvent.BUTTON1:
+                                while (primoClick && campo[riga][col].getContenuto() == MINA){
+                                    System.out.println("Rigenero");
+                                    generaMine();
+                                }
+                                if (primoClick)
+                                    contaIndizi();
+                                
+                                primoClick = false;
+                                
                                 // scopre la singola cella (o l'area vuota)
                                 scopriCella(cliccata.getR(), cliccata.getC());
+
+
+                                if(checkVittoria()){
+                                    JOptionPane.showMessageDialog(null, "Hai vinto!");
+                                    return;
+                                }
                                 break;
 
                             case MouseEvent.BUTTON3:
@@ -83,6 +104,12 @@ public class Campo extends JPanel {
      * Posiziona le mine casualmente nelle celle
      */
     private void generaMine() {
+        for (int r = 0; r < campo.length; r++) {
+            for (int c = 0; c < this.campo[0].length; c++) {
+                campo[r][c].setContenuto(0);
+            }
+        }
+
         Random rand = new Random();
 
         for (int i = 0; i < this.mine; i++) {
@@ -139,11 +166,17 @@ public class Campo extends JPanel {
 
         cella.setVisibile(true);
 
+        //controllo se ho perso
+        if(cella.getContenuto() == MINA){
+            JOptionPane.showMessageDialog(null, "Game over!");
+            System.exit(0);
+        }
+
         int[] bordi = controllaBordi(cella);
 
         //Se la cella non ha mine adiacenti scopro tutte le sue celle adiacenti
         if (cella.getContenuto() == 0){
-            //sopra
+            /*//sopra
             scopriCella(bordi[0], bordi[2]);
             scopriCella(bordi[0], c);
             scopriCella(bordi[0], bordi[3]);
@@ -154,6 +187,12 @@ public class Campo extends JPanel {
             scopriCella(bordi[1], bordi[2]);
             scopriCella(bordi[1], c);
             scopriCella(bordi[1], bordi[3]);
+*/
+        for(int riga = bordi[0]; riga <= bordi[1]; riga++){
+            for(int col = bordi[2]; col <= bordi[3]; col++){
+                scopriCella(riga, col);
+            }
+        }
         }
     }
 
@@ -181,5 +220,20 @@ public class Campo extends JPanel {
         else bordi[3] = cella.getC() +1;
 
         return bordi;
+    }
+
+    private boolean checkVittoria(){
+        boolean win = true;
+        //Label, identifica il ciclo più esterno per poter fare il break su di esso
+        ciclo:
+        for (int r = 0; r < 10; r++) {
+            for (int c = 0; c < 10; c++) {
+                if(campo[r][c].getContenuto() != this.MINA && !campo[r][c].isScoperta()){
+                    win = false;
+                    break ciclo;
+                }
+            }
+        }
+        return win;
     }
 }

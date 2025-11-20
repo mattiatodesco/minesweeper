@@ -55,7 +55,7 @@ public class Cella extends Canvas {
                 //Se c'è una mina
                 if(contenuto == MINA){
                     g.setColor(Color.red);
-                    g.fillRect(0, 0, getWidth(), getHeight());
+                    g.fillOval(0, 0, getWidth(), getHeight());
                 } else if (contenuto > 0){
                         g.setColor(colori[contenuto]);
                         g.drawString(contenuto + "", getWidth()/3, 2*getHeight()/3);
