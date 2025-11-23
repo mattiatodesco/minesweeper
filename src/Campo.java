@@ -226,8 +226,8 @@ public class Campo extends JPanel {
         boolean win = true;
         //Label, identifica il ciclo più esterno per poter fare il break su di esso
         ciclo:
-        for (int r = 0; r < 10; r++) {
-            for (int c = 0; c < 10; c++) {
+        for (int r = 0; r < campo.length; r++) {
+            for (int c = 0; c < campo[0].length; c++) {
                 if(campo[r][c].getContenuto() != this.MINA && !campo[r][c].isScoperta()){
                     win = false;
                     break ciclo;
